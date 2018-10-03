@@ -9,6 +9,6 @@ if (process.env.NODE_ENV !== 'live'){
    middleware.push(createLogger())
 }
 
-const store = createStore(reducers, applyMiddlewar(...middleware))
+const store = createStore(reducers, applyMiddleware(...middleware))
 
 export default store

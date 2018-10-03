@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
-import { handleSubmitData } from "./actions/action";
+import { View, Text, TextInput, Button, Alert, ScrollView } from "react-native";
+import { handleSubmitData, getDataApi } from "./actions/action";
 import { connect } from "react-redux";
 
 class Setup extends Component {
@@ -22,9 +22,17 @@ class Setup extends Component {
         {
           title: "hey",
           content: "Test 2"
+        },
+        {
+          title: "hallo",
+          content: "test3"
         }
       ]
     };
+  }
+
+  componentDidMount() {
+    this.props.dispatch(getDataApi());
   }
 
   submitData = () => {
@@ -37,8 +45,9 @@ class Setup extends Component {
   };
 
   render() {
+    console.log(this.props.getData)
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <TextInput
             onChangeText={txt => this.setState({ title: txt })}
@@ -54,16 +63,34 @@ class Setup extends Component {
         </View>
 
         <View style={{ flex: 1 }}>
-          {this.state.dataNotesDummy.map((dataObj, idx) => (
-            <View>
-              <Text>{dataObj.title}</Text>
-              <Text>{dataObj.content}</Text>
+          {this.props.getData.map((dataObj, idx) => (
+            <View
+              style={{
+                backgroundColor: "lightblue",
+                marginTop: 10,
+                borderWidth: 1,
+                paddingLeft: 5,
+                paddingRight: 5,
+                borderRadius: 10
+              }}
+            >
+              <Text style={{ marginLeft: 5, fontSize: 20, color: "#000" }}>
+                {dataObj.title}
+              </Text>
+              <Text style={{ marginLeft: 5 }}>{dataObj.content}</Text>
             </View>
           ))}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 
-export default connect()(Setup);
+const mapStateToProps = state => {
+  return {
+    getData: state.getData.data,
+    isFetching: state.getData.isFetching
+  };
+};
+
+export default connect(mapStateToProps)(Setup);
